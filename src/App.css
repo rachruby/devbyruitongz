@@ -28,6 +28,12 @@ html {
 }
 
 body {
+  background-image: url('./assets/img/bg.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  margin: 0;
   font-weight: 400;
   overflow-x: hidden;
   position: relative;
