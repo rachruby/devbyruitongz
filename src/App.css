@@ -562,6 +562,9 @@ nav.navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
+  position: relative;
+  z-index: 10;
+  margin-top: auto;
 }
 .newsletter-bx {
   background: #FFFFFF;
@@ -604,7 +607,7 @@ nav.navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
   z-index: -1;
   top: 0;
   left: 0;
-  bottom: 0;
+  bottom: 0; 
   right: 0;
 }
 .new-email-bx input {
