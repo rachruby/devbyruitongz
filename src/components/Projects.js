@@ -6,7 +6,7 @@ import projImg3 from "../assets/img/maeveLogo.jpg";
 import projImg4 from "../assets/img/getTrashLogoFinalize.png";
 import projImg5 from "../assets/img/campusLogoRec.png";
 import projImg6 from "../assets/img/medicPadLogo.jpg";
-import colorSharp2 from "../assets/img/32.png";
+import colorSharp2 from "../assets/img/22.png";
 import 'animate.css';
 import TrackVisibility from 'react-on-screen';
 
