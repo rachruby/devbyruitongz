@@ -1,7 +1,7 @@
-# Personal Portfolio Website in React
+# Dev By Ruitong Z Portfolio Website
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
+Created to share my interest, experience and projects with customized design in a playful style! 
 
 Built using:
 
