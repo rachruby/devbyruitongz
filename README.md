@@ -1,9 +1,7 @@
 # Dev By Ruitong Z Portfolio Website
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-Created to share my interest, experience and projects with customized design in a playful style!
-
-Work experience lives on a macOS-style desktop. Each company is an app icon inside a glass island. Open an icon and a window prompts out with the role, dates, and bullets. 
+The site is a macOS-style desktop. A glass island holds an Experiences app and the company logos for each role. Open a logo and the work prompts out in a window. 
 
 Built using:
 
