@@ -1,8 +1,11 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { experiences } from "../data/experience";
+import { projects } from "../data/projects";
 import opentableLogo from "../assets/logos/opentable.svg";
 import cibcLogo from "../assets/logos/cibc.svg";
 import cooperatorsLogo from "../assets/logos/cooperators.svg";
+import wallpaper from "../assets/img/bg.png";
+import { Finder } from "./Finder";
 import "./Desktop.css";
 
 const logos = {
@@ -35,6 +38,15 @@ function ExperiencesGlyph() {
   );
 }
 
+function FolderGlyph() {
+  return (
+    <svg viewBox="0 0 64 52" aria-hidden="true">
+      <path d="M4 16c0-3.4 2.6-6 6-6h16l5 6h23c3.4 0 6 2.6 6 6v22c0 3.4-2.6 6-6 6H10c-3.4 0-6-2.6-6-6V16z" fill="#4c97ef" />
+      <path d="M4 24h56v20c0 3.4-2.6 6-6 6H10c-3.4 0-6-2.6-6-6V24z" fill="#8ec4ff" />
+    </svg>
+  );
+}
+
 function TrafficGlyph({ kind }) {
   const paths = {
     close: "M3.2 3.2l5.6 5.6M8.8 3.2L3.2 8.8",
@@ -51,6 +63,8 @@ function TrafficGlyph({ kind }) {
 export const Desktop = () => {
   const [openId, setOpenId] = useState(null);
   const [zoomed, setZoomed] = useState(false);
+  const [finderView, setFinderView] = useState("column");
+  const [projectId, setProjectId] = useState(projects[0].id);
   const [now, setNow] = useState(() => new Date());
   const [caret, setCaret] = useState("50%");
   const buttonRefs = useRef({});
@@ -60,7 +74,8 @@ export const Desktop = () => {
   const titleId = useId();
   const role = experiences.find((item) => item.id === openId) ?? null;
   const experiencesOpen = openId === "experiences";
-  const menuName = role ? role.company : experiencesOpen ? "Experiences" : "Desktop";
+  const projectsOpen = openId === "projects";
+  const menuName = role ? role.company : experiencesOpen ? "Experiences" : projectsOpen ? "Finder" : "Desktop";
 
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 15000);
@@ -76,7 +91,22 @@ export const Desktop = () => {
         event.preventDefault();
         setZoomed(false);
         setOpenId(null);
+        return;
       }
+      if (openId !== "projects") {
+        return;
+      }
+      const forward = event.key === "ArrowRight" || event.key === "ArrowDown";
+      const backward = event.key === "ArrowLeft" || event.key === "ArrowUp";
+      if (!forward && !backward) {
+        return;
+      }
+      event.preventDefault();
+      setProjectId((current) => {
+        const index = projects.findIndex((project) => project.id === current);
+        const next = (index + (forward ? 1 : -1) + projects.length) % projects.length;
+        return projects[next].id;
+      });
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -114,8 +144,14 @@ export const Desktop = () => {
       setCaret(`${Math.min(90, Math.max(10, percent))}%`);
     };
     placeCaret();
+    const frame = window.requestAnimationFrame(placeCaret);
+    const timer = window.setTimeout(placeCaret, 460);
     window.addEventListener("resize", placeCaret);
-    return () => window.removeEventListener("resize", placeCaret);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(timer);
+      window.removeEventListener("resize", placeCaret);
+    };
   }, [openId, zoomed]);
 
   const toggle = (id) => {
@@ -139,7 +175,7 @@ export const Desktop = () => {
   };
 
   return (
-    <div className="desk">
+    <div className="desk" style={{ backgroundImage: `url(${wallpaper})` }}>
       <header className="desk-menu">
         <div className="desk-menu-left">
           <span className="desk-mark" aria-hidden="true">RZ</span>
@@ -157,7 +193,6 @@ export const Desktop = () => {
           <button
             type="button"
             className={`desk-app${experiencesOpen ? " is-open" : ""}`}
-            style={{ "--rest": "-12px", "--delay": "0s" }}
             aria-pressed={experiencesOpen}
             aria-expanded={experiencesOpen}
             aria-label="Open Experiences"
@@ -179,7 +214,6 @@ export const Desktop = () => {
                 key={item.id}
                 type="button"
                 className={`desk-app${isOpen ? " is-open" : ""}`}
-                style={{ "--rest": item.rest, "--delay": item.delay }}
                 aria-pressed={isOpen}
                 aria-expanded={isOpen}
                 aria-label={`Open ${item.company}`}
@@ -194,7 +228,24 @@ export const Desktop = () => {
                 <span className="desk-label">{item.company}</span>
               </button>
             );
-          })}
+            })}
+          <span className="desk-divider" aria-hidden="true" />
+          <button
+            type="button"
+            className={`desk-app${projectsOpen ? " is-open" : ""}`}
+            aria-pressed={projectsOpen}
+            aria-expanded={projectsOpen}
+            aria-label="Open Projects"
+            ref={(node) => {
+              buttonRefs.current.projects = node;
+            }}
+            onClick={() => toggle("projects")}
+          >
+            <span className="desk-icon desk-icon-folder">
+              <FolderGlyph />
+            </span>
+            <span className="desk-label">Projects</span>
+          </button>
         </div>
 
         <div className="desk-slot">
@@ -275,7 +326,33 @@ export const Desktop = () => {
             </article>
           )}
 
-          {!openId && <p className="desk-hint">Open Experiences, or a company logo.</p>}
+          {projectsOpen && (
+            <article
+              className={`desk-window is-finder${zoomed ? " is-zoomed" : ""}`}
+              role="dialog"
+              aria-labelledby={titleId}
+              tabIndex={-1}
+              ref={dialogRef}
+              style={{ "--caret": zoomed ? "50%" : caret }}
+            >
+              <WindowChrome
+                titleId={titleId}
+                title="Projects"
+                zoomed={zoomed}
+                onClose={close}
+                onZoom={() => setZoomed((value) => !value)}
+                glyph={<FolderGlyph />}
+              />
+              <Finder
+                view={finderView}
+                onView={setFinderView}
+                selectedId={projectId}
+                onSelect={setProjectId}
+              />
+            </article>
+          )}
+
+          {!openId && <p className="desk-hint">Open an app, or the Projects folder.</p>}
         </div>
       </main>
     </div>

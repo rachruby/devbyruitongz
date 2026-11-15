@@ -1,13 +1,9 @@
 # Dev By Ruitong Z Portfolio Website
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-The site is a macOS-style desktop. A glass island holds an Experiences app and the company logos for each role. Open a logo and the work prompts out in a window. 
+The site is a macOS-style desktop. The purple sticker wallpaper stays behind a glass dock along the bottom: Experiences, the company logos, and a Projects folder. Open a logo and the role prompts out in a window. Open Projects and Finder shows the old project section in column, list, or gallery view, with each project's image and description. 
 
-Built using:
-
-- Front-end library: React
-- CSS framework: React-bootstrap
-- CSS animations library: Animate.css
+Built using React.
 
 In the /personal-portfolio, you can run:
 

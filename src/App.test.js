@@ -22,3 +22,20 @@ test('opens a company from the island and lists roles in Experiences', async () 
   expect(within(folder).getByRole('button', { name: /CIBC/i })).toBeInTheDocument();
   expect(within(folder).getByRole('button', { name: /Co-operators/i })).toBeInTheDocument();
 });
+
+test('opens Projects in Finder and switches from columns to the gallery', async () => {
+  render(<App />);
+
+  await userEvent.click(screen.getByRole('button', { name: 'Open Projects' }));
+  const finder = screen.getByRole('dialog');
+  expect(finder).toHaveTextContent(/Stanford TreeHacks 2025/i);
+  expect(within(finder).getByRole('radio', { name: 'Column view' })).toHaveAttribute('aria-checked', 'true');
+
+  await userEvent.click(within(finder).getByRole('option', { name: /Rewind/i }));
+  expect(finder).toHaveTextContent(/memory preservation/i);
+
+  await userEvent.click(within(finder).getByRole('radio', { name: 'Gallery view' }));
+  expect(finder).toHaveTextContent(/1 of 6|2 of 6/);
+  await userEvent.click(within(finder).getByRole('button', { name: 'Next project' }));
+  expect(finder).toHaveTextContent(/Maeve, your digital closet/i);
+});
