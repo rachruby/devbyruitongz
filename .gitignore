@@ -24,3 +24,6 @@ yarn-error.log*
 
 # environment variables
 .env
+
+# visitor notes saved by the local notes server
+/data/visitor-notes.json

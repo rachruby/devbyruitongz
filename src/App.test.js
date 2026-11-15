@@ -2,6 +2,10 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 
+beforeEach(() => {
+  window.localStorage.clear();
+});
+
 test('opens a company from the island and lists roles in Experiences', async () => {
   render(<App />);
 
@@ -38,4 +42,25 @@ test('opens Projects in Finder and switches from columns to the gallery', async 
   expect(finder).toHaveTextContent(/1 of 6|2 of 6/);
   await userEvent.click(within(finder).getByRole('button', { name: 'Next project' }));
   expect(finder).toHaveTextContent(/Maeve, your digital closet/i);
+});
+
+test('makes a folder, moves an app off the dock, and puts it back', async () => {
+  render(<App />);
+
+  await userEvent.click(screen.getByRole('button', { name: 'New Folder' }));
+  const dialog = screen.getByRole('dialog');
+  expect(dialog).toHaveTextContent(/this folder is empty/i);
+  expect(screen.getByRole('button', { name: 'Open untitled folder' })).toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole('button', { name: 'Delete Folder' }));
+  expect(screen.queryByRole('button', { name: 'Open untitled folder' })).not.toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole('button', { name: 'Open Notes' }));
+  await userEvent.click(screen.getByRole('button', { name: 'Move to the desktop' }));
+  const dock = screen.getByRole('toolbar', { name: 'Dock' });
+  expect(within(dock).queryByRole('button', { name: 'Open Notes' })).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Open Notes' })).toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole('button', { name: 'Move to the dock' }));
+  expect(within(dock).getByRole('button', { name: 'Open Notes' })).toBeInTheDocument();
 });

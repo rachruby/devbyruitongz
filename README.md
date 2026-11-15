@@ -1,7 +1,9 @@
 # Dev By Ruitong Z Portfolio Website
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-The site is a macOS-style desktop. The purple sticker wallpaper stays behind a glass dock along the bottom: Experiences, the company logos, and a Projects folder. Open a logo and the role prompts out in a window. Open Projects and Finder shows the old project section in column, list, or gallery view, with each project's image and description. 
+The site is a macOS-style desktop on the purple sticker wallpaper. The dock sits along the bottom. Drag an app off the dock to leave it on the desktop, drag it back, or drop it on a folder. New Folder adds a folder, and Delete Folder removes the selected one. Projects still opens in Finder. Notes saves what a visitor writes on the site, so the notes are still there the next time Notes is opened.
+
+The notes API is `node server/index.js` (port 4742). The dev server proxies `/api` to it. With `DATABASE_URL` set, notes go to Postgres. Without it, they are stored in `data/visitor-notes.json`. 
 
 Built using React.
 
