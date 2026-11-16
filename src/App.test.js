@@ -64,3 +64,24 @@ test('makes a folder, moves an app off the dock, and puts it back', async () => 
   await userEvent.click(screen.getByRole('button', { name: 'Move to the dock' }));
   expect(within(dock).getByRole('button', { name: 'Open Notes' })).toBeInTheDocument();
 });
+
+test('shows skills, portfolio links, and the MLH news profile', async () => {
+  render(<App />);
+
+  const skills = screen.getByRole('navigation', { name: 'Skills' });
+  expect(skills).toHaveTextContent('Python');
+  expect(skills).toHaveTextContent('TypeScript');
+
+  expect(screen.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/rachruby');
+  expect(screen.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/in/rachelzhang24/');
+  expect(screen.getByRole('link', { name: 'Devpost' })).toHaveAttribute('href', 'https://devpost.com/rachruby');
+  expect(screen.getByRole('img', { name: 'Dev by Ruitong' })).toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole('button', { name: 'Open News' }));
+  const news = screen.getByRole('dialog');
+  expect(news).toHaveTextContent(/MLH Top 50/i);
+  expect(within(news).getByRole('link', { name: 'Open the MLH Top 50 profile' })).toHaveAttribute(
+    'href',
+    'https://top.mlh.com/2025/profiles/rachel-zhang',
+  );
+});

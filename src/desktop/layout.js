@@ -1,4 +1,4 @@
-export const APP_IDS = ["experiences", "opentable", "cibc", "cooperators", "projects", "notes"];
+export const APP_IDS = ["experiences", "opentable", "cibc", "cooperators", "projects", "notes", "news"];
 
 const APP_SET = new Set(APP_IDS);
 

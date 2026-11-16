@@ -38,5 +38,6 @@ test("puts a missing app back on the dock", () => {
     "cooperators",
     "projects",
     "notes",
+    "news",
   ]);
 });

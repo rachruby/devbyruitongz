@@ -5,6 +5,8 @@ import opentableLogo from "../assets/logos/opentable.svg";
 import cibcLogo from "../assets/logos/cibc.svg";
 import cooperatorsLogo from "../assets/logos/cooperators.svg";
 import wallpaper from "../assets/img/bg.png";
+import brandLogo from "../assets/img/dev-by-ruitong.png";
+import { skills, profiles, mlhProfile } from "../data/skills";
 import { Finder } from "./Finder";
 import { Notes } from "./Notes";
 import {
@@ -33,6 +35,7 @@ const labels = {
   cooperators: "Co-operators",
   projects: "Projects",
   notes: "Notes",
+  news: "News",
 };
 
 function formatMenuClock(date) {
@@ -64,6 +67,38 @@ function FolderGlyph({ user }) {
     <svg viewBox="0 0 64 52" aria-hidden="true">
       <path d="M4 16c0-3.4 2.6-6 6-6h16l5 6h23c3.4 0 6 2.6 6 6v22c0 3.4-2.6 6-6 6H10c-3.4 0-6-2.6-6-6V16z" fill={user ? "#3d8eef" : "#4c97ef"} />
       <path d="M4 24h56v20c0 3.4-2.6 6-6 6H10c-3.4 0-6-2.6-6-6V24z" fill={user ? "#f6d36b" : "#8ec4ff"} />
+    </svg>
+  );
+}
+
+function NewsGlyph() {
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <rect x="8" y="10" width="48" height="44" rx="6" fill="#fff" />
+      <rect x="14" y="18" width="16" height="12" rx="2" fill="#7a5cff" />
+      <path d="M34 20h14M34 26h14M14 38h34M14 44h22" stroke="#3d3654" strokeWidth="3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function ProfileGlyph({ id }) {
+  if (id === "github") {
+    return (
+      <svg viewBox="0 0 16 16" aria-hidden="true">
+        <path fill="currentColor" d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.23 1.88.88 2.34.67.07-.52.28-.88.5-1.08-1.78-.2-3.65-.89-3.65-3.96 0-.88.31-1.59.83-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.52.56.83 1.27.83 2.15 0 3.08-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.19c0 .21.15.46.55.38A8 8 0 0 0 8 0z" />
+      </svg>
+    );
+  }
+  if (id === "devpost") {
+    return (
+      <svg viewBox="0 0 16 16" aria-hidden="true">
+        <path fill="currentColor" d="M2 2h5.2v5.2H2zM8.8 2H14v5.2H8.8zM2 8.8h5.2V14H2zM8.8 8.8H14V14H8.8z" />
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path fill="currentColor" d="M3.6 6.2H1.2V14h2.4V6.2zM2.4 1.4A1.4 1.4 0 1 0 2.4 4.2 1.4 1.4 0 0 0 2.4 1.4zM14.8 8.7c0-1.9-1-2.8-2.4-2.8-1.1 0-1.8.6-2.1 1.2h-.1V6.2H8v7.8h2.3V9.6c0-1.2.2-2.3 1.7-2.3 1.4 0 1.4 1.3 1.4 2.4V14h2.4V8.7z" />
     </svg>
   );
 }
@@ -101,6 +136,9 @@ function AppFace({ id, userFolder }) {
   }
   if (id === "notes") {
     return <span className="desk-icon desk-icon-notes"><NotesGlyph /></span>;
+  }
+  if (id === "news") {
+    return <span className="desk-icon desk-icon-news"><NewsGlyph /></span>;
   }
   if (id === "projects" || userFolder) {
     return <span className="desk-icon desk-icon-folder"><FolderGlyph user={userFolder} /></span>;
@@ -143,7 +181,9 @@ export const Desktop = () => {
         ? "Finder"
         : notesOpen
           ? "Notes"
-          : openFolder
+          : openId === "news"
+            ? "News"
+            : openFolder
             ? layout.folders[openFolder].name
             : "Desktop";
 
@@ -395,7 +435,7 @@ export const Desktop = () => {
     <div className="desk" style={{ backgroundImage: `url(${wallpaper})` }}>
       <header className="desk-menu">
         <div className="desk-menu-left">
-          <span className="desk-mark" aria-hidden="true">RZ</span>
+          <img className="desk-logo" src={brandLogo} alt="Dev by Ruitong" />
           <span className="desk-menu-app">{menuName}</span>
           <button type="button" className="desk-menu-action" onClick={addFolder}>New Folder</button>
           <button
@@ -409,7 +449,19 @@ export const Desktop = () => {
           <span className="desk-menu-name">Ruitong Zhang</span>
         </div>
         <div className="desk-menu-right">
-          <span>Toronto</span>
+          <nav className="desk-status" aria-label="Skills">
+            {skills.map((skill) => (
+              <span className="desk-status-item" key={skill}>{skill}</span>
+            ))}
+          </nav>
+          <nav className="desk-social" aria-label="Portfolios">
+            {profiles.map((profile) => (
+              <a key={profile.id} href={profile.href} target="_blank" rel="noopener noreferrer" aria-label={profile.label}>
+                <ProfileGlyph id={profile.id} />
+              </a>
+            ))}
+          </nav>
+          <span className="desk-city">Toronto</span>
           <time dateTime={now.toISOString()}>{formatMenuClock(now)}</time>
         </div>
       </header>
@@ -475,6 +527,20 @@ export const Desktop = () => {
               <WindowChrome titleId={titleId} title="Projects" zoomed={zoomed} onClose={close} onZoom={() => setZoomed((value) => !value)} glyph={<FolderGlyph />} />
               <Finder view={finderView} onView={setFinderView} selectedId={projectId} onSelect={setProjectId} />
               {placeActions("projects")}
+            </article>
+          )}
+
+          {openId === "news" && (
+            <article className={`desk-window is-news${zoomed ? " is-zoomed" : ""}`} role="dialog" aria-labelledby={titleId} tabIndex={-1} ref={dialogRef} style={{ "--caret": zoomed ? "50%" : caret }}>
+              <WindowChrome titleId={titleId} title="News" zoomed={zoomed} onClose={close} onZoom={() => setZoomed((value) => !value)} glyph={<NewsGlyph />} />
+              <div className="desk-body news-body">
+                <p className="desk-parent">MLH Top 50 · 2025</p>
+                <p className="desk-role">Rachel Zhang</p>
+                <p className="desk-lead">This is my MLH Top 50 portfolio.</p>
+                <p><a href={mlhProfile} target="_blank" rel="noopener noreferrer">Open the MLH Top 50 profile</a></p>
+                <iframe className="news-frame" title="MLH Top 50 profile" src={mlhProfile} />
+              </div>
+              {placeActions("news")}
             </article>
           )}
 
