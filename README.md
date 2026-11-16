@@ -1,13 +1,11 @@
 # Dev By Ruitong Z Portfolio Website
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-Created to share my interest, experience and projects with customized design in a playful style! 
+The site is a macOS-style desktop on the purple sticker wallpaper. The dock sits along the bottom. Drag an app off the dock to leave it on the desktop, drag it back, or drop it on a folder. New Folder adds a folder, and Delete Folder removes the selected one. Projects still opens in Finder. Notes saves what a visitor writes on the site, so the notes are still there the next time Notes is opened.
 
-Built using:
+The notes API is `node server/index.js` (port 4742). The dev server proxies `/api` to it. With `DATABASE_URL` set, notes go to Postgres. Without it, they are stored in `data/visitor-notes.json`. 
 
-- Front-end library: React
-- CSS framework: React-bootstrap
-- CSS animations library: Animate.css
+Built using React.
 
 In the /personal-portfolio, you can run:
 
